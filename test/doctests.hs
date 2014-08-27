@@ -1,6 +1,7 @@
 import Test.DocTest
 import System.Directory
 import Data.List
+import System.FilePath.Posix
 
 main :: IO ()
 main = getSourceFiles >>= \sourceFiles -> doctest $
@@ -9,7 +10,5 @@ main = getSourceFiles >>= \sourceFiles -> doctest $
 getSourceFiles :: IO [FilePath]
 getSourceFiles = do 
                 files <- getDirectoryContents "src"
-                let haskellSourceFiles = (filter (`notElem` [".", ".."]) . filter (not . isSuffixOf ".hs")) files
+                let haskellSourceFiles = (map dropExtension . filter (`notElem` [".", ".."]) . filter (isSuffixOf ".hs")) files
                 return haskellSourceFiles
-
-
