@@ -1,4 +1,19 @@
-module PrimeFactors where
+module Main where
+
+import System.Environment
+import Control.Applicative 
+
+main :: IO ()
+main = do
+    args <- getArgs
+    let firstArg = getFirstArg args
+    let primeFactor = largestPrimeFactorV1 firstArg
+    putStrLn (show primeFactor)
+
+toInt n = read n :: Integer
+
+getFirstArg :: [String] -> Integer
+getFirstArg args = head $ map (toInt) args
 
 squareRootRounded :: Integer -> Integer
 squareRootRounded = round . sqrt . fromIntegral
@@ -13,8 +28,11 @@ candidates n = [3,5..squareRootRounded n]
 isPrime :: Integer -> Bool
 isPrime n = all ((/=0) . rem n) (candidates n)
 
-lazyPrimeSequence = error "todo"
+isNotPrime :: Integer -> Bool
+isNotPrime n = any ((==0) . rem n) (candidates n)
 
--- TODO change to headMay or headOr
 largestPrimeFactor :: Integer -> Integer
-largestPrimeFactor = head . dropWhile (not . isPrime) . factors
+largestPrimeFactor = head . dropWhile (isNotPrime) . factors
+
+largestPrimeFactorV1 :: Integer -> Integer
+largestPrimeFactorV1 = head . dropWhile (not . isPrime) . factors

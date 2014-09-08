@@ -1,4 +1,7 @@
 .*.swp
 *.swp
 dist
+*.hi
+*.o
+*.prof
 
