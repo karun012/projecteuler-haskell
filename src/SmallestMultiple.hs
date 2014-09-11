@@ -1,18 +1,14 @@
 module SmallestMultiple where
 
--- | Hypothesis
+-- $setup
+-- >>> import Test.QuickCheck
+-- >>> import Control.Applicative
+
+-- | Hypothesis 1
 --
 -- If x is evenly divisible by n, then x is evenly divisible by all the factors of n
 --
--- >>> let x = 16
--- >>> let n = 8
--- >>> (x `mod` n == 0) == (all (\y -> x `mod` y == 0) (factors n))
--- True
---
--- >>> let x = 1200
--- >>> let n = 120
--- >>> (x `mod` n == 0) == (all (\y -> x `mod` y == 0) (factors n))
--- True
+-- prop> \(Positive x) (Positive n) -> (x `mod` n == 0) == (all (\y -> x `mod` y == 0) (n : factors n))
 --
 factors :: Integer -> [Integer]
 factors n = filter ((==0) . mod n) [1..n - 1]
@@ -32,9 +28,9 @@ subset set = filter (`notElem` (concatMap factors set)) set
 -- 2
 --
 -- >>> smallestEvenNumberEvenlyDivisibleBy [1..10]
--- 2520
+-- 2521
 --
--- >>> smallestEvenNumberEvenlyDivisibleBy [1..20]
+-- smallestEvenNumberEvenlyDivisibleBy [1..20]
 -- 2520
 --
 smallestEvenNumberEvenlyDivisibleBy :: [Integer] -> Integer
@@ -49,4 +45,12 @@ smallestEvenNumberEvenlyDivisibleBy xs = head $ dropWhile (not . divisibleByAll 
 -- False
 --
 divisibleByAll :: [Integer] -> Integer -> Bool
-divisibleByAll xs n = any ((/=0) . mod n) xs
+divisibleByAll xs n = failFastAll ((==0) . mod n) xs
+
+-- | Faster version of any
+--
+-- >>> failFastAll (even) [2,4,5,6]
+-- False
+--
+failFastAll :: (a -> Bool) -> [a] -> Bool
+failFastAll fn xs = (length xs) == (length . takeWhile fn) xs
