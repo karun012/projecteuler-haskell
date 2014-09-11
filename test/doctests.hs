@@ -1,4 +1,1 @@
-import Test.DocTest
-
--- TODO make it pick up all tests automatically
-main = doctest["-isrc"]
+{-# OPTIONS_GHC -F -pgmF doctest-discover -optF config.json #-}
