@@ -4,7 +4,7 @@ module SmallestMultiple where
 -- >>> import Test.QuickCheck
 -- >>> import Control.Applicative
 
--- | Hypothesis 1
+-- | Hypothesis
 --
 -- If x is evenly divisible by n, then x is evenly divisible by all the factors of n
 --
