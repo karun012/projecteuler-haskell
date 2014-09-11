@@ -28,7 +28,7 @@ subset set = filter (`notElem` (concatMap factors set)) set
 -- 2
 --
 -- >>> smallestEvenNumberEvenlyDivisibleBy [1..10]
--- 2521
+-- 2520
 --
 -- smallestEvenNumberEvenlyDivisibleBy [1..20]
 -- 2520
