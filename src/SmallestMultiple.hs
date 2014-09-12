@@ -34,8 +34,29 @@ subset set = filter (`notElem` (concatMap factors set)) set
 -- 2520
 --
 smallestEvenNumberEvenlyDivisibleBy :: [Integer] -> Integer
-smallestEvenNumberEvenlyDivisibleBy xs = head $ dropWhile (not . divisibleByAll (subset xs)) [(last xs),(last xs + 2)..]
+smallestEvenNumberEvenlyDivisibleBy xs = head $ dropWhile (not . divisibleByAll (subset xs)) (candidates (subset xs))
 
+-- | Finds the probable candidate range for finding the smallest even number evenly divisible by all the numbers in the range
+--
+-- >>> candidates [1..2]
+-- [2]
+--
+-- >>> candidates [1..3]
+-- [6]
+--
+-- >>> let xs = [1..10]
+-- >>> let max = foldr (*) 1 xs
+-- >>> let actual = candidates [1..10]
+-- >>> let expected = [10*9*8..max]
+-- >>> expected == actual
+-- True
+--
+candidates :: [Integer] -> [Integer]
+candidates xs = [min..max]
+                    where max = product xs
+                          min = (*1) $ round $ (sqrt . fromIntegral) max
+
+ans = 232792560
 -- | Tells if a number is divisible by all the numbers in the given set
 --
 -- >>> divisibleByAll [1,2] 4
@@ -45,12 +66,4 @@ smallestEvenNumberEvenlyDivisibleBy xs = head $ dropWhile (not . divisibleByAll 
 -- False
 --
 divisibleByAll :: [Integer] -> Integer -> Bool
-divisibleByAll xs n = failFastAll ((==0) . mod n) xs
-
--- | Faster version of any
---
--- >>> failFastAll (even) [2,4,5,6]
--- False
---
-failFastAll :: (a -> Bool) -> [a] -> Bool
-failFastAll fn xs = (length xs) == (length . takeWhile fn) xs
+divisibleByAll xs n = not $ any ((/=0) . mod n) xs
