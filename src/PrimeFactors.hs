@@ -2,6 +2,7 @@ module Main where
 
 import System.Environment
 import Control.Applicative 
+import FastAll
 
 main :: IO ()
 main = do
@@ -26,7 +27,7 @@ candidates n = [3,5..squareRootRounded n]
 --candidates n = [2..n-1]
 
 isPrime :: Integer -> Bool
-isPrime n = all ((/=0) . rem n) (candidates n)
+isPrime n = fastAll ((/=0) . rem n) (candidates n)
 
 isNotPrime :: Integer -> Bool
 isNotPrime n = any ((==0) . rem n) (candidates n)
