@@ -1,3 +1,5 @@
+-- Compile - ghc -main-is CollatzSequence -threaded -O2 
+-- Run - CollaztSequence -N -s
 module CollatzSequence where
 
 import Data.List
