@@ -5,13 +5,16 @@ module CollatzSequence where
 import Data.List
 import Data.List.Split
 import Control.Concurrent.ParallelIO.Global
+import Control.Concurrent
 
 main :: IO ()
 main = do
-      let blockSize = 100000
+      maxSimultaneousThreads <- getNumCapabilities
+      print $ "Number of threads that can be run in parallel: " ++ show maxSimultaneousThreads
       let min = 1
       let max = 1000000
-      let blocks = chunksOf blockSize [min..max]
+      let blockSize = max `div` (toInteger maxSimultaneousThreads)
+      let blocks = chunksOf (fromIntegral blockSize) [min..max]
       results <- parallel (map largestCollatzSequenceInBlock blocks)
       let maxLengthCollatzSequence = largestChain results
       print $ "Max length collatz sequence between " ++ show min ++ " and " ++ show max ++ ": " ++ show maxLengthCollatzSequence
